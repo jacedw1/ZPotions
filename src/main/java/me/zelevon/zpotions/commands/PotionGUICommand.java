@@ -30,7 +30,7 @@ public class PotionGUICommand extends BaseCommand {
         MessageHandler.msg(player, "&bSuccessfully removed Z-Potion effects!");
     }
 
-    @Subcommand("clear")
+    @Subcommand("clearplayer")
     @CommandPermission("zp.clear.others")
     @CommandCompletion("@players")
     public void onClearOthers(CommandSender sender, Player target) {
