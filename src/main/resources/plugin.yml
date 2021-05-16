@@ -1,0 +1,4 @@
+name: ZPotions
+version: @version@
+main: me.zelevon.zpotions.ZPotions
+api-version: 1.16
