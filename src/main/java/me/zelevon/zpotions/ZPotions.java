@@ -13,6 +13,7 @@ import me.zelevon.zpotions.storage.Queries;
 import me.zelevon.zpotions.storage.cache.PlayerCache;
 import me.zelevon.zpotions.utils.MessageHandler;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -91,6 +92,9 @@ public final class ZPotions extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        for(Player player : Bukkit.getServer().getOnlinePlayers()) {
+            PlayerCache.get(player).removeEffects();
+        }
         PlayerCache.saveAll();
         try {
             dbManager.close();
