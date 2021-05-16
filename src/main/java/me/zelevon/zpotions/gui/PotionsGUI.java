@@ -76,20 +76,19 @@ public class PotionsGUI implements InventoryProvider {
         contents.set(2, 4, ClickableItem.of(cancel, e -> plugin.getEffects().open(player)));
 
         if(items.size() > 7) {
+            ItemStack prevPage = new ItemStack(Material.ARROW);
+            ItemMeta prevPageMeta = prevPage.getItemMeta();
+            prevPageMeta.setDisplayName(MessageHandler.colorize("&7Previous Page"));
+            prevPage.setItemMeta(prevPageMeta);
+
+            contents.set(2, 2, ClickableItem.of(prevPage, e -> plugin.getPotions().open(player, pagination.previous().getPage())));
+            
             ItemStack nextPage = new ItemStack(Material.ARROW);
             ItemMeta nextPageMeta = nextPage.getItemMeta();
-            nextPageMeta.setDisplayName(MessageHandler.colorize("&7Previous Page"));
+            nextPageMeta.setDisplayName(MessageHandler.colorize("&7Next Page"));
             nextPage.setItemMeta(nextPageMeta);
 
-            contents.set(2, 2, ClickableItem.of(nextPage, e -> plugin.getPotions().open(player, pagination.previous().getPage())));
-
-
-            ItemStack prevPage = new ItemStack(Material.ARROW);
-            ItemMeta prevPageMeta = nextPage.getItemMeta();
-            prevPageMeta.setDisplayName(MessageHandler.colorize("&7Previous Page"));
-            prevPage.setItemMeta(nextPageMeta);
-            
-            contents.set(2, 6, ClickableItem.of(prevPage, e -> plugin.getPotions().open(player, pagination.next().getPage())));
+            contents.set(2, 6, ClickableItem.of(nextPage, e -> plugin.getPotions().open(player, pagination.next().getPage())));
         }
     }
 
