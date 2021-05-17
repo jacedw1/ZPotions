@@ -18,9 +18,8 @@ public class DatabaseManager {
         this.plugin = ZPotions.getInstance();
         String url = "jdbc:sqlite:" + plugin.getDirectory().toAbsolutePath() + File.separator + databaseName;
         try {
-            Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection(url);
-        }  catch (SQLException | ClassNotFoundException e){
+        }  catch (SQLException e){
             Bukkit.getLogger().log(Level.SEVERE, "Database Connection to " + databaseName + " Failed.");
             e.printStackTrace();
         }

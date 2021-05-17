@@ -1,4 +1,4 @@
-import org.apache.tools.ant.filters.ReplaceTokens
+import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
 
 plugins {
     id 'java'
@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'me.zelevon'
-version = '1.0-SNAPSHOT'
+version = '1.0'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -28,30 +28,31 @@ repositories {
     maven {
         url = 'https://repo.aikar.co/content/groups/aikar/'
     }
-    maven {
-        url = "https://papermc.io/repo/repository/maven-public/"
-    }
 }
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
-    compile "co.aikar:acf-paper:0.5.0-SNAPSHOT"
-    compile 'fr.minuskube.inv:smart-invs:1.2.7'
-    // CONFIGURATE 4.0
-    compile 'org.spongepowered:configurate-gson:4.0.0'
-    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
-    // INTERNAL DEPENDENCIES
-    compile fileTree(dir: 'libs', include: '*.jar')
+    compileOnly(group: 'org.spigotmc', name: 'spigot-api', version: '1.16.5-R0.1-SNAPSHOT')
+    compile group: 'co.aikar', name: 'acf-paper', version: '0.5.0-SNAPSHOT'
+    compile (group: 'fr.minuskube.inv', name: 'smart-invs', version: '1.2.7') {
+        exclude group: 'org.spigotmc', module: 'spigot-api'
+    }
+    compile (group: 'org.spongepowered', name: 'configurate-gson', version: '4.0.0') {
+        exclude group: 'com.google.code.gson'
+    }
+    compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
 }
 
-processResources {
-    from(sourceSets.main.resources.srcDirs) {
-        filter ReplaceTokens, tokens: [version: version]
-    }
-
-    shadowJar {
-        relocate 'co.aikar.commands', 'libs.co.aikar.acf'
-        relocate 'co.aikar.locales', 'libs.co.aikar.locales'
-    }
-    build.dependsOn(shadowJar)
+task relocateShadowJar(type: ConfigureShadowRelocation) {
+    target = tasks.shadowJar
+    prefix = "me.zelevon.libs"
 }
+shadowJar {
+    relocate 'co.aikar.commands', 'me.zelevon.libs.co.aikar.acf'
+    relocate 'co.aikar.locales', 'me.zelevon.libs.co.aikar.locales'
+    dependencies {
+        exclude(dependency('org.spigotmc:.*'))
+        exclude(dependency('org.xerial:.*'))
+    }
+}
+tasks.shadowJar.dependsOn tasks.relocateShadowJar
+build.dependsOn(shadowJar)
