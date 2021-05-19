@@ -16,9 +16,23 @@ public class PlayerCache {
     public static void add(Player player) {
         UUID uuid = player.getUniqueId();
         if(players.containsKey(uuid)) {
+            remove(player);
+        }
+        Bukkit.getScheduler().runTaskAsynchronously(ZPotions.getInstance(), () -> {
+            PlayerWrapper wrapper = new PlayerWrapper(uuid);
+            players.put(uuid, wrapper);
+        });
+    }
+
+    public static void remove(Player player) {
+        UUID uuid = player.getUniqueId();
+        if(!players.containsKey(uuid)) {
             return;
         }
-        players.put(uuid, new PlayerWrapper(uuid));
+        Bukkit.getScheduler().runTaskAsynchronously(ZPotions.getInstance(), () -> {
+            players.get(uuid).save();
+            players.remove(uuid);
+        });
     }
 
     public static PlayerWrapper get(Player player) {

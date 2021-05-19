@@ -69,6 +69,7 @@ public class PlayerWrapper {
     }
 
     public void clear() {
+        removeEffects();
         this.potions[0] = 0;
         this.potions[1] = 0;
         this.potions[2] = 0;

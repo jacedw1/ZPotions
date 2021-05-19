@@ -15,7 +15,6 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import java.util.List;
-import java.util.Random;
 
 @ConfigSerializable
 public class PotionOption {

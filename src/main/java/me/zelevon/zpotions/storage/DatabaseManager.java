@@ -14,7 +14,7 @@ public class DatabaseManager {
     private ZPotions plugin;
     private Connection connection;
 
-    public DatabaseManager(String databaseName){
+    public DatabaseManager(String databaseName) {
         this.plugin = ZPotions.getInstance();
         String url = "jdbc:sqlite:" + plugin.getDirectory().toAbsolutePath() + File.separator + databaseName;
         try {

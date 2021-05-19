@@ -1,7 +1,6 @@
 package me.zelevon.zpotions.storage;
 
 import me.zelevon.zpotions.ZPotions;
-import org.bukkit.Bukkit;
 
 import java.sql.*;
 import java.util.UUID;
@@ -24,11 +23,8 @@ public class Queries {
 
     public static void createTable() {
         dbManager = ZPotions.getInstance().getDbManager();
-        try {
-            Connection con = dbManager.getConnection();
-            Statement stmt = con.createStatement();
-            stmt.execute(CREATE_TABLE);
-            stmt.close();
+        try (PreparedStatement stmt = dbManager.getConnection().prepareStatement(CREATE_TABLE)) {
+            stmt.execute();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -37,9 +33,7 @@ public class Queries {
 
     public static int[] getPlayer(UUID uuid) {
         int[] result = {0, 0, 0};
-        try {
-            Connection con = dbManager.getConnection();
-            PreparedStatement stmt = con.prepareStatement(GET_PLAYER);
+        try (PreparedStatement stmt = dbManager.getConnection().prepareStatement(GET_PLAYER)) {
             stmt.setString(1, uuid.toString());
             ResultSet rs = stmt.executeQuery();
             if(rs.next()) {
@@ -47,7 +41,6 @@ public class Queries {
                 result[1] = rs.getInt(3);
                 result[2] = rs.getInt(4);
             }
-            stmt.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -56,15 +49,12 @@ public class Queries {
     }
 
     public static void savePlayer(UUID uuid, int potionSlotOne, int potionSlotTwo, int potionSlotThree) {
-        try {
-            Connection con = dbManager.getConnection();
-            PreparedStatement stmt = con.prepareStatement(SAVE_PLAYER);
+        try (PreparedStatement stmt = dbManager.getConnection().prepareStatement(SAVE_PLAYER)) {
             stmt.setString(1, uuid.toString());
             stmt.setInt(2, potionSlotOne);
             stmt.setInt(3, potionSlotTwo);
             stmt.setInt(4, potionSlotThree);
             stmt.executeUpdate();
-            stmt.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
